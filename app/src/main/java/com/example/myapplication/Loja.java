@@ -47,25 +47,25 @@ public class Loja extends AppCompatActivity {
                 ImageView img = itemView.findViewById(R.id.imageViewLoja);
                 switch (nomeProduto) {
                     case "Processador":
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.processador));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
                         break;
                     case "Placa de Vídeo":
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.placavideo));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placavideo));
                         break;
                     case "Placa Mãe":
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.placamae));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placamae));
                         break;
                     case "Memória RAM":
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.ram));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ram));
                         break;
                     case "Gabinete":
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.gabinete));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.gabinete));
                         break;
                     case "SSD":
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.ssd));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ssd));
                         break;
                     default:
-                        img.setImageDrawable(itemView.getContext().getResources().getDrawable(R.drawable.processador));
+                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
                         break;
                 }
 

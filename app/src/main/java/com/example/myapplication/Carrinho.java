@@ -39,11 +39,11 @@ public class Carrinho extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View itemView = super.getView(position, convertView, parent);
-                String taskName = listaProdutos.get(position);
-                String taskDescription = gerenciadosProdutos.getListaCarrinho().get(position).getPreco();
+                String nomeProduto = listaProdutos.get(position);
+                String precoProduto = gerenciadosProdutos.getListaCarrinho().get(position).getPreco();
 
                 ImageView img = itemView.findViewById(R.id.imageViewAttachment);
-                switch (taskName) {
+                switch (nomeProduto) {
                     case "Processador":
                         img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
                         break;
@@ -71,8 +71,8 @@ public class Carrinho extends AppCompatActivity {
                 TextView textViewNomeProduto = itemView.findViewById(R.id.textViewNomeProduto);
                 TextView textViewPrecoProduto = itemView.findViewById(R.id.textViewPrecoProduto);
 
-                textViewNomeProduto.setText(taskName);
-                textViewPrecoProduto.setText(taskDescription);
+                textViewNomeProduto.setText(nomeProduto);
+                textViewPrecoProduto.setText(precoProduto);
 
                 return itemView;
             }
@@ -98,8 +98,8 @@ public class Carrinho extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
 
-        View addTaskButton = findViewById(R.id.adicionarProdutoButton);
-        addTaskButton.setOnClickListener(new View.OnClickListener() {
+        View adicionarProduto = findViewById(R.id.adicionarProdutoButton);
+        adicionarProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Carrinho.this, Loja.class));
