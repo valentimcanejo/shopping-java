@@ -1,4 +1,6 @@
 package com.example.myapplication;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,29 +16,87 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.List;
 
 public class Loja extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private GerenciadorProdutos gerenciadosProdutos;
+    private JSONArray arrayDeProdutos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loja);
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                HttpURLConnection urlConnection;
+                try {
+                    URL url = new URL("https://ifrn-ddm.vercel.app/api/items");
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setConnectTimeout(10000);
+                    urlConnection.setReadTimeout(15000);
+                    urlConnection.connect();
+                    InputStream inputStream;
+                    if (urlConnection.getResponseCode() < HttpURLConnection.HTTP_BAD_REQUEST) {
+                        inputStream = urlConnection.getInputStream();
+                    } else {
+                        inputStream = urlConnection.getErrorStream();
+                    }
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    reader.close();
+
+                    // Converter a resposta JSON para objetos Java
+                    String jsonResponse = stringBuilder.toString();
+                    JSONObject resArray = new JSONObject(jsonResponse);
+
+                    JSONArray data = resArray.getJSONArray("data");
+                    arrayDeProdutos = data;
+                    //System.out.println(retornaNome());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         ListView listView = findViewById(R.id.lojaListView);
         gerenciadosProdutos = GerenciadorProdutos.getInstance();
         List<String> listaProdutos = gerenciadosProdutos.getListaNomesLoja();
         adapter = new ArrayAdapter<String>(this, R.layout.item_loja, R.id.textViewNomeProdutoLoja, listaProdutos) {
+            @SuppressLint("UseCompatLoadingForDrawables")
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -73,7 +133,9 @@ public class Loja extends AppCompatActivity {
                 TextView textViewNomeProduto = itemView.findViewById(R.id.textViewNomeProdutoLoja);
                 TextView textViewPrecoProduto = itemView.findViewById(R.id.textViewPrecoProdutoLoja);
 
-                textViewNomeProduto.setText(nomeProduto);
+
+                textViewNomeProduto.setText("Dados: " + retornaNome());
+
                 textViewPrecoProduto.setText(precoProduto);
 
                 View adicionarAoCarrinho = itemView.findViewById(R.id.adicionarAoCarrinho);
@@ -99,7 +161,19 @@ public class Loja extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    public String retornaNome() {
+        String result = "teste";
+        try {
 
+            if (arrayDeProdutos != null) {
+                System.out.println(arrayDeProdutos.getJSONObject(0).getString("nome"));
+                return arrayDeProdutos.getJSONObject(0).getString("nome");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
     @Override
     protected void onResume() {
@@ -110,6 +184,7 @@ public class Loja extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

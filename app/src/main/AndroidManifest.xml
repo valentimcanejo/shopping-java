@@ -26,6 +26,8 @@
         <activity android:name=".TelaFinal" android:theme="@style/Theme.MyApplication.NoActionBar" />
         <activity android:name=".DetalhesItem" android:theme="@style/Theme.MyApplication.NoActionBar" />
         <activity android:name=".Loja" android:theme="@style/Theme.MyApplication.NoActionBar" />
-    </application>
 
+    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>
