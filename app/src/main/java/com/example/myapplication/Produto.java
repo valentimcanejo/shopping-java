@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 public class Produto {
+    private int id;
     private String nome;
     private String preco;
 
@@ -15,5 +16,9 @@ public class Produto {
 
     public String getPreco() {
         return preco;
+    }
+
+    public int getId() {
+        return id;
     }
 }

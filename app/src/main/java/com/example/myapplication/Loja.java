@@ -135,7 +135,7 @@ public class Loja extends AppCompatActivity {
                                 TextView textViewPrecoProduto = itemView.findViewById(R.id.textViewPrecoProdutoLoja);
 
 
-                                textViewNomeProduto.setText("Dados: " + retornaNome());
+                                textViewNomeProduto.setText(retornaNome(position));
 
                                 textViewPrecoProduto.setText(precoProduto);
 
@@ -144,6 +144,10 @@ public class Loja extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         gerenciadosProdutos.adicionarAoCarrinho(nomeProduto, precoProduto);
+                                        Produto novoProduto = new Produto(nomeProduto, precoProduto);
+                                        BD bd = new BD(getBaseContext());
+                                        bd.inserir(novoProduto);
+
                                         //gerenciadosProdutos.removerDaLoja(position);
                                         Snackbar mySnackbar = Snackbar.make(findViewById(android.R.id.content),
                                                 "Item adicionado ao carrinho!", Snackbar.LENGTH_SHORT);
@@ -169,13 +173,13 @@ public class Loja extends AppCompatActivity {
 
     }
 
-    public String retornaNome() {
+    public String retornaNome(int position) {
         String result = "";
         try {
 
             if (arrayDeProdutos != null) {
-                System.out.println(arrayDeProdutos.getJSONObject(0).getString("nome"));
-                return arrayDeProdutos.getJSONObject(0).getString("nome");
+
+                return arrayDeProdutos.getJSONObject(position).getString("nome");
             }
         } catch (JSONException e) {
             e.printStackTrace();
