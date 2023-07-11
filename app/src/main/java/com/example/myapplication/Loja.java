@@ -54,8 +54,11 @@ public class Loja extends AppCompatActivity {
 
             @Override
             public void run() {
-
+                ListView listView = findViewById(R.id.lojaListView);
+                gerenciadosProdutos = GerenciadorProdutos.getInstance();
+                List<String> listaProdutos = gerenciadosProdutos.getListaNomesLoja();
                 HttpURLConnection urlConnection;
+                BufferedReader reader;
                 try {
                     URL url = new URL("https://ifrn-ddm.vercel.app/api/items");
                     urlConnection = (HttpURLConnection) url.openConnection();
@@ -70,7 +73,7 @@ public class Loja extends AppCompatActivity {
                         inputStream = urlConnection.getErrorStream();
                     }
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
                     StringBuilder stringBuilder = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
@@ -82,87 +85,92 @@ public class Loja extends AppCompatActivity {
                     String jsonResponse = stringBuilder.toString();
                     JSONObject resArray = new JSONObject(jsonResponse);
 
-                    JSONArray data = resArray.getJSONArray("data");
-                    arrayDeProdutos = data;
+                    arrayDeProdutos = resArray.getJSONArray("data");
                     //System.out.println(retornaNome());
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        adapter = new ArrayAdapter<String>(Loja.this, R.layout.item_loja, R.id.textViewNomeProdutoLoja, listaProdutos) {
+                            @SuppressLint("UseCompatLoadingForDrawables")
+                            @NonNull
+                            @Override
+                            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                                View itemView = super.getView(position, convertView, parent);
+                                String nomeProduto = listaProdutos.get(position);
+                                String precoProduto = gerenciadosProdutos.getListaLoja().get(position).getPreco();
+
+                                ImageView img = itemView.findViewById(R.id.imageViewLoja);
+                                switch (nomeProduto) {
+                                    case "Processador":
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
+                                        break;
+                                    case "Placa de Vídeo":
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placavideo));
+                                        break;
+                                    case "Placa Mãe":
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placamae));
+                                        break;
+                                    case "Memória RAM":
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ram));
+                                        break;
+                                    case "Gabinete":
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.gabinete));
+                                        break;
+                                    case "SSD":
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ssd));
+                                        break;
+                                    default:
+                                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
+                                        break;
+                                }
+
+
+                                TextView textViewNomeProduto = itemView.findViewById(R.id.textViewNomeProdutoLoja);
+                                TextView textViewPrecoProduto = itemView.findViewById(R.id.textViewPrecoProdutoLoja);
+
+
+                                textViewNomeProduto.setText("Dados: " + retornaNome());
+
+                                textViewPrecoProduto.setText(precoProduto);
+
+                                View adicionarAoCarrinho = itemView.findViewById(R.id.adicionarAoCarrinho);
+                                adicionarAoCarrinho.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        gerenciadosProdutos.adicionarAoCarrinho(nomeProduto, precoProduto);
+                                        //gerenciadosProdutos.removerDaLoja(position);
+                                        Snackbar mySnackbar = Snackbar.make(findViewById(android.R.id.content),
+                                                "Item adicionado ao carrinho!", Snackbar.LENGTH_SHORT);
+
+                                        mySnackbar.getView().setBackgroundColor(getColor(R.color.teal_200));
+
+                                        mySnackbar.show();
+                                    }
+                                });
+
+
+                                return itemView;
+                            }
+                        };
+                        listView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+
+                    }
+                });
             }
         }).start();
 
-        ListView listView = findViewById(R.id.lojaListView);
-        gerenciadosProdutos = GerenciadorProdutos.getInstance();
-        List<String> listaProdutos = gerenciadosProdutos.getListaNomesLoja();
-        adapter = new ArrayAdapter<String>(this, R.layout.item_loja, R.id.textViewNomeProdutoLoja, listaProdutos) {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View itemView = super.getView(position, convertView, parent);
-                String nomeProduto = listaProdutos.get(position);
-                String precoProduto = gerenciadosProdutos.getListaLoja().get(position).getPreco();
 
-                ImageView img = itemView.findViewById(R.id.imageViewLoja);
-                switch (nomeProduto) {
-                    case "Processador":
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
-                        break;
-                    case "Placa de Vídeo":
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placavideo));
-                        break;
-                    case "Placa Mãe":
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placamae));
-                        break;
-                    case "Memória RAM":
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ram));
-                        break;
-                    case "Gabinete":
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.gabinete));
-                        break;
-                    case "SSD":
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ssd));
-                        break;
-                    default:
-                        img.setImageDrawable(itemView.getContext().getDrawable(R.drawable.processador));
-                        break;
-                }
-
-
-                TextView textViewNomeProduto = itemView.findViewById(R.id.textViewNomeProdutoLoja);
-                TextView textViewPrecoProduto = itemView.findViewById(R.id.textViewPrecoProdutoLoja);
-
-
-                textViewNomeProduto.setText("Dados: " + retornaNome());
-
-                textViewPrecoProduto.setText(precoProduto);
-
-                View adicionarAoCarrinho = itemView.findViewById(R.id.adicionarAoCarrinho);
-                adicionarAoCarrinho.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        gerenciadosProdutos.adicionarAoCarrinho(nomeProduto, precoProduto);
-                        //gerenciadosProdutos.removerDaLoja(position);
-                        Snackbar mySnackbar = Snackbar.make(findViewById(android.R.id.content),
-                                "Item adicionado ao carrinho!", Snackbar.LENGTH_SHORT);
-
-                        mySnackbar.getView().setBackgroundColor(getColor(R.color.teal_200));
-
-                        mySnackbar.show();
-                    }
-                });
-
-
-                return itemView;
-            }
-        };
-        listView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
     }
 
     public String retornaNome() {
-        String result = "teste";
+        String result = "";
         try {
 
             if (arrayDeProdutos != null) {
@@ -178,10 +186,12 @@ public class Loja extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<String> listProdutos = gerenciadosProdutos.getListaNomesLoja();
-        adapter.clear();
-        adapter.addAll(listProdutos);
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            List<String> listProdutos = gerenciadosProdutos.getListaNomesLoja();
+            adapter.clear();
+            adapter.addAll(listProdutos);
+            adapter.notifyDataSetChanged();
+        }
 
     }
 

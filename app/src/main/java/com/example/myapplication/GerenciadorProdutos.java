@@ -7,7 +7,7 @@ public class GerenciadorProdutos {
     private List<Produto> listaLoja;
     private List<Produto> listaCarrinho;
 
-    private GerenciadorProdutos() {
+    public GerenciadorProdutos() {
         listaCarrinho = new ArrayList<>();
         listaLoja = new ArrayList<>();
     }
