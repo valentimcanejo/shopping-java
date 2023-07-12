@@ -19,6 +19,7 @@
         android:layout_below="@+id/tituloTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50px"
         android:text="Ver Produtos" />
 
 

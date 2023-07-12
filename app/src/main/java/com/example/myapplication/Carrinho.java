@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,7 @@ import android.widget.TextView;
 public class Carrinho extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private GerenciadorProdutos gerenciadosProdutos;
-    private BD banco;
+    private List<Produto> lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,9 @@ public class Carrinho extends AppCompatActivity {
         gerenciadosProdutos = GerenciadorProdutos.getInstance();
         //List<String> listaProdutos = gerenciadosProdutos.getListaNomesCarrinho();
         BD bd = new BD(getBaseContext());
-        banco = new BD(getBaseContext());
-        List<Produto> lista = bd.getProdutos();
+        //banco = new BD(getBaseContext());
+
+        lista = bd.getProdutos();
         List<String> listaProdutos = new ArrayList<>();
         for (Produto produto : lista) {
             listaProdutos.add(produto.getNome());
@@ -55,8 +57,8 @@ public class Carrinho extends AppCompatActivity {
                 View itemView = super.getView(position, convertView, parent);
 
                 //String nomeProduto = listaProdutos.get(position);
-                String nomeProduto = listaProdutos.get(position);
-                String precoProduto = listaProdutos.get(position);
+                String nomeProduto = lista.get(position).getNome();
+                String precoProduto = lista.get(position).getPreco();
                 System.out.println(position);
                 ImageView img = itemView.findViewById(R.id.imageViewAttachment);
                 switch (nomeProduto) {
@@ -122,6 +124,8 @@ public class Carrinho extends AppCompatActivity {
         });
 
         View finalizarCompra = findViewById(R.id.finalizarCompra);
+        finalizarCompra.setEnabled(listaProdutos.size() > 0);
+
         finalizarCompra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,14 +138,21 @@ public class Carrinho extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<String> listProdutos = banco.getListaNomesCarrinho();
-        System.out.println(listProdutos);
-        //adapter.clear();
-        adapter.addAll(listProdutos);
+        BD bd = new BD(getBaseContext());
+        lista = bd.getProdutos();
+
+        List<String> listaProdutos = new ArrayList<>();
+        for (Produto produto : lista) {
+            listaProdutos.add(produto.getNome());
+        }
+
+        adapter.clear();
+        adapter.addAll(listaProdutos);
         adapter.notifyDataSetChanged();
 
+        View finalizarCompra = findViewById(R.id.finalizarCompra);
+        finalizarCompra.setEnabled(listaProdutos.size() > 0);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

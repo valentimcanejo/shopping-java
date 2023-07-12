@@ -45,7 +45,7 @@
     <Button
         android:id="@+id/finalizarCompra"
         android:layout_width="wrap_content"
-        android:layout_height="125px"
+        android:layout_height="170px"
         android:text="Comprar"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
@@ -55,8 +55,8 @@
     <ImageView
         android:src="@drawable/botaoloja"
         android:id="@+id/adicionarProdutoButton"
-        android:layout_width="120px"
-        android:layout_height="120px"
+        android:layout_width="170px"
+        android:layout_height="170px"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:fabSize="normal"
