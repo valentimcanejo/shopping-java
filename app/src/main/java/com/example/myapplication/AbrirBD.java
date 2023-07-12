@@ -11,7 +11,7 @@ public class AbrirBD extends SQLiteOpenHelper {
     String estrutura =
             "CREATE TABLE produto(" +
                     "_id integer primary key autoincrement, " +
-                    "nome text not null)";
+                    "nome text not null, " + "preco text not null)";
 
     public AbrirBD(Context c){
         super(c, NOME_BD, null, VERSAO_BD);

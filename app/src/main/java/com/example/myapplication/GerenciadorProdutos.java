@@ -43,6 +43,7 @@ public class GerenciadorProdutos {
     }
 
     public void adicionarItens(){
+
         Produto processador = new Produto("Processador", "$150.00");
         Produto placavideo = new Produto("Placa de Vídeo", "$300.00");
         Produto placamae = new Produto("Placa Mãe", "$100.00");

@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Loja extends AppCompatActivity {
@@ -57,6 +58,7 @@ public class Loja extends AppCompatActivity {
                 ListView listView = findViewById(R.id.lojaListView);
                 gerenciadosProdutos = GerenciadorProdutos.getInstance();
                 List<String> listaProdutos = gerenciadosProdutos.getListaNomesLoja();
+
                 HttpURLConnection urlConnection;
                 BufferedReader reader;
                 try {
@@ -92,6 +94,19 @@ public class Loja extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                List<Produto> items = new ArrayList<>();
+                for (int i = 0; i < arrayDeProdutos.length(); i++) {
+                    try {
+                        JSONObject produtoJson = arrayDeProdutos.getJSONObject(i);
+                        String nomeProduto = produtoJson.getString("nome");
+                        String precoProduto = produtoJson.getString("preco");
+
+                        Produto produto = new Produto(nomeProduto, precoProduto);
+                        items.add(produto);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -102,8 +117,8 @@ public class Loja extends AppCompatActivity {
                             @Override
                             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                                 View itemView = super.getView(position, convertView, parent);
-                                String nomeProduto = listaProdutos.get(position);
-                                String precoProduto = gerenciadosProdutos.getListaLoja().get(position).getPreco();
+                                String nomeProduto = items.get(position).getNome();
+                                String precoProduto = items.get(position).getPreco();
 
                                 ImageView img = itemView.findViewById(R.id.imageViewLoja);
                                 switch (nomeProduto) {

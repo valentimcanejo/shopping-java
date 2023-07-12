@@ -1,4 +1,5 @@
 package com.example.myapplication;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,13 +14,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import android.widget.AdapterView;
 import android.widget.TextView;
 
 public class Carrinho extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private GerenciadorProdutos gerenciadosProdutos;
+    private BD banco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +38,26 @@ public class Carrinho extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.listaProdutosCarrinho);
         gerenciadosProdutos = GerenciadorProdutos.getInstance();
-        List<String> listaProdutos = gerenciadosProdutos.getListaNomesCarrinho();
+        //List<String> listaProdutos = gerenciadosProdutos.getListaNomesCarrinho();
+        BD bd = new BD(getBaseContext());
+        banco = new BD(getBaseContext());
+        List<Produto> lista = bd.getProdutos();
+        List<String> listaProdutos = new ArrayList<>();
+        for (Produto produto : lista) {
+            listaProdutos.add(produto.getNome());
+
+        }
+
         adapter = new ArrayAdapter<String>(this, R.layout.item_carrinho, R.id.textViewNomeProduto, listaProdutos) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View itemView = super.getView(position, convertView, parent);
-                String nomeProduto = listaProdutos.get(position);
-                String precoProduto = gerenciadosProdutos.getListaCarrinho().get(position).getPreco();
 
+                //String nomeProduto = listaProdutos.get(position);
+                String nomeProduto = listaProdutos.get(position);
+                String precoProduto = listaProdutos.get(position);
+                System.out.println(position);
                 ImageView img = itemView.findViewById(R.id.imageViewAttachment);
                 switch (nomeProduto) {
                     case "Processador":
@@ -81,7 +97,6 @@ public class Carrinho extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -119,8 +134,9 @@ public class Carrinho extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<String> listProdutos = gerenciadosProdutos.getListaNomesCarrinho();
-        adapter.clear();
+        List<String> listProdutos = banco.getListaNomesCarrinho();
+        System.out.println(listProdutos);
+        //adapter.clear();
         adapter.addAll(listProdutos);
         adapter.notifyDataSetChanged();
 
