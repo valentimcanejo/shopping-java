@@ -42,20 +42,11 @@ public class GerenciadorProdutos {
         return listaCarrinho;
     }
 
-    public void adicionarItens(){
+    public void adicionarItens(List<Produto> items){
+for(int i = 0; i< items.size();i++){
+    listaLoja.add(items.get(i));
+}
 
-        Produto processador = new Produto("Processador", "$150.00");
-        Produto placavideo = new Produto("Placa de Vídeo", "$300.00");
-        Produto placamae = new Produto("Placa Mãe", "$100.00");
-        Produto ram = new Produto("Memória RAM", "$50.00");
-        Produto ssd = new Produto("SSD", "$120.00");
-        Produto gabinete = new Produto("Gabinete", "80.00");
-        listaLoja.add(processador);
-        listaLoja.add(placavideo);
-        listaLoja.add(placamae);
-        listaLoja.add(ram);
-        listaLoja.add(ssd);
-        listaLoja.add(gabinete);
 
     }
 

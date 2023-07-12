@@ -14,21 +14,12 @@ public class BD {
     private List<Produto> listaLoja;
     private List<Produto> listaCarrinho;
 
-
     public BD(Context c) {
 
         AbrirBD bdCore = new AbrirBD(c);
         bd = bdCore.getWritableDatabase();
         listaCarrinho = new ArrayList<>();
         listaLoja = new ArrayList<>();
-    }
-
-    public List<String> getListaNomesCarrinho() {
-        List<String> lista = new ArrayList<>();
-        for (Produto item : listaCarrinho) {
-            lista.add(item.getNome());
-        }
-        return lista;
     }
 
     public void inserir(Produto a) {

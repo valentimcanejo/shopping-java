@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         Button verProdutosButton = findViewById(R.id.verProdutosButton);
         gerenciadorTarefas = GerenciadorProdutos.getInstance();
 
-        gerenciadorTarefas.adicionarItens();
+
         verProdutosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -52,7 +52,6 @@ public class Loja extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 ListView listView = findViewById(R.id.lojaListView);
@@ -83,7 +82,7 @@ public class Loja extends AppCompatActivity {
                     }
                     reader.close();
 
-                    // Converter a resposta JSON para objetos Java
+
                     String jsonResponse = stringBuilder.toString();
                     JSONObject resArray = new JSONObject(jsonResponse);
 
@@ -107,6 +106,9 @@ public class Loja extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
                 }
+                gerenciadosProdutos.adicionarItens(items);
+
+                //System.out.println(items.get(0).getNome());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -207,6 +209,7 @@ public class Loja extends AppCompatActivity {
         super.onResume();
         if (adapter != null) {
             List<String> listProdutos = gerenciadosProdutos.getListaNomesLoja();
+            System.out.println(listProdutos);
             adapter.clear();
             adapter.addAll(listProdutos);
             adapter.notifyDataSetChanged();
