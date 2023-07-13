@@ -87,7 +87,7 @@ public class Loja extends AppCompatActivity {
                     JSONObject resArray = new JSONObject(jsonResponse);
 
                     arrayDeProdutos = resArray.getJSONArray("data");
-                    //System.out.println(retornaNome());
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -102,12 +102,13 @@ public class Loja extends AppCompatActivity {
 
                         Produto produto = new Produto(nomeProduto, precoProduto);
                         items.add(produto);
+                        listaProdutos.add(nomeProduto);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                 }
                 gerenciadosProdutos.adicionarItens(items);
-
+               // System.out.println(items.get(0).getNome());
                 //System.out.println(items.get(0).getNome());
                 runOnUiThread(new Runnable() {
                     @Override
@@ -121,7 +122,7 @@ public class Loja extends AppCompatActivity {
                                 View itemView = super.getView(position, convertView, parent);
                                 String nomeProduto = items.get(position).getNome();
                                 String precoProduto = items.get(position).getPreco();
-
+                                System.out.println(nomeProduto);
                                 ImageView img = itemView.findViewById(R.id.imageViewLoja);
                                 switch (nomeProduto) {
                                     case "Processador":
@@ -209,7 +210,7 @@ public class Loja extends AppCompatActivity {
         super.onResume();
         if (adapter != null) {
             List<String> listProdutos = gerenciadosProdutos.getListaNomesLoja();
-            System.out.println(listProdutos);
+            //System.out.println(listProdutos);
             adapter.clear();
             adapter.addAll(listProdutos);
             adapter.notifyDataSetChanged();
